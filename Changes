@@ -1,0 +1,5 @@
+Revision history for perl module DB_File::Utils
+
+0.001 2015-07-04
+
+ - First version, with commands 'keys' and 'get'
