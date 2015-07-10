@@ -3,6 +3,11 @@
 package DB_File::Utils;
 use App::Cmd::Setup -app;
 
+sub global_opt_spec {
+  return [ 'u|utf8' => "this usage screen" ];
+}
+
+
 1;
 
 =encoding UTF-8

@@ -1,4 +1,4 @@
-package DB_File::Utils::Command::get;
+package DB_File::Utils::Command::put;
 
 use v5.20;
 use DB_File::Utils -command;
@@ -8,11 +8,15 @@ use warnings;
 use DB_File;
 use Fcntl;
 
-sub abstract { "Dumps value for a specific key" }
+sub abstract { "Sets the value for a specific key" }
 
-sub description { "Given a DB_File with strings as keys, prints\nto standard output the value associated\nwith a specific key. Dies if key is not found." }
+sub description { "Given a DB_File with strings as keys, sets or ressets the value for a specific key." }
 
 sub usage_desc { $_[0]->SUPER::usage_desc . ' <dbfile> <key>' }
+
+sub opt_spec {
+	return ();
+}
 
 sub validate_args {
 	my ($self, $opt, $args) = @_;
@@ -31,22 +35,20 @@ sub execute {
 	my $file = $args->[0];
 	my $key  = $args->[1];
 
-	if ($opt->{utf8}) {
-		print "UTF8 requested\n";
+	my $contents;
+	{
+		local $/ = undef;
+		$contents = <STDIN>;
 	}
 
-	_retrieve($file, $key);
+	_store($file, $key, $contents);
 }
 
-sub _retrieve {
-	my ($file, $key) = @_;
+sub _store {
+	my ($file, $key, $value) = @_;
 	my %hash;
 	tie %hash,  'DB_File', $file, O_RDWR, '0666', $DB_BTREE;
-	if (exists($hash{$key})) {
-		say $hash{$key};
-	} else {
-		die "Key $key not found!"
-	}
+	$hash{$key} = $value;
 	untie %hash;
 }
 

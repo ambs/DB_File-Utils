@@ -1,10 +1,12 @@
 package DB_File::Utils::Command;
 use App::Cmd::Setup -command;
  
+
 sub opt_spec {
   my ( $class, $app ) = @_;
   return (
     [ 'help' => "this usage screen" ],
+  
     $class->options($app),
   )
 }
