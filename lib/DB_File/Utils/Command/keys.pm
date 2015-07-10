@@ -29,6 +29,8 @@ sub validate_args {
 sub execute {
 	my ($self, $opt, $args) = @_;
 
+	$opt = { %{$self->app->global_options}, %$opt};
+
 	foreach my $file (@$args) {
 		_dump($file);
 	}

@@ -14,10 +14,6 @@ sub description { "Given a DB_File with strings as keys, prints\nto standard out
 
 sub usage_desc { $_[0]->SUPER::usage_desc . ' <dbfile> <key>' }
 
-sub opt_spec {
-	return ();
-}
-
 sub validate_args {
 	my ($self, $opt, $args) = @_;
 
@@ -30,8 +26,14 @@ sub validate_args {
 sub execute {
 	my ($self, $opt, $args) = @_;
 
+	$opt = { %{$self->app->global_options}, %$opt};
+
 	my $file = $args->[0];
 	my $key  = $args->[1];
+
+	if ($opt->{utf8}) {
+		print "UTF8 requested\n";
+	}
 
 	_retrieve($file, $key);
 }

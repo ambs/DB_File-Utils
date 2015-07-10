@@ -30,6 +30,8 @@ sub validate_args {
 sub execute {
 	my ($self, $opt, $args) = @_;
 
+	$opt = { %{$self->app->global_options}, %$opt};
+
 	my $file = $args->[0];
 	my $key  = $args->[1];
 
