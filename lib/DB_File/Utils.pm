@@ -11,7 +11,7 @@ sub global_opt_spec {
      ['u|utf8' => "Force UTF8 encoding/decoding on values."],
      ['btree' => "Use BTree indexing method (default)"],
      ['hash'  => "Use Hash indexing method"],
-     ['recno' => "Use RecNo indexing method"],
+  #   ['recno' => "Use RecNo indexing method"],
   );
 }
 
@@ -20,7 +20,8 @@ sub do_tie {
 
 	my %hash;
 	my $method = $ops->{recno} ? $DB_RECNO : ($ops->{hash} ? $DB_HASH : $DB_BTREE);
-	tie %hash, 'DB_File', $file, O_RDWR, '0666', $method;
+  my $mode   = $ops->{_create_} ? (O_CREAT | O_RDWR) : O_RDWR;
+	tie %hash, 'DB_File', $file, $mode, '0666', $method;
 
 	return \%hash;
 }

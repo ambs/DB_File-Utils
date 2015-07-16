@@ -1,6 +1,11 @@
 Revision history for perl module DB_File::Utils
 
- - support switches to change the type of DB_File indexing;
+0.003 2015-07-16
+
+ - added tests.
+ - support 'new' command to create empty db.
+ - support switches to change the type of DB_File indexing
+   (BTree and Hash supported ATM)
 
 0.002 2015-07-16
 
