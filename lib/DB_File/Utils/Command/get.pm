@@ -4,6 +4,7 @@ use v5.20;
 use DB_File::Utils -command;
 use strict;
 use warnings;
+use Encode qw'encode decode';
 
 use DB_File;
 use Fcntl;
@@ -31,23 +32,22 @@ sub execute {
 	my $file = $args->[0];
 	my $key  = $args->[1];
 
-	if ($opt->{utf8}) {
-		print "UTF8 requested\n";
-	}
+	binmode STDOUT, ":utf8" if $opt->{utf8};
 
-	_retrieve($file, $key);
+	_retrieve($self, $file, $key, $opt);
 }
 
 sub _retrieve {
-	my ($file, $key) = @_;
-	my %hash;
-	tie %hash,  'DB_File', $file, O_RDWR, '0666', $DB_BTREE;
-	if (exists($hash{$key})) {
-		say $hash{$key};
+	my ($self, $file, $key, $opt) = @_;
+
+	my $hash = $self->app->do_tie( $file, $opt );
+
+	if (exists($hash->{$key})) {
+		say $opt->{utf8} ? decode('utf-8', $hash->{$key}) : $hash->{$key};
 	} else {
 		die "Key $key not found!"
 	}
-	untie %hash;
+	untie $hash;
 }
 
 1;

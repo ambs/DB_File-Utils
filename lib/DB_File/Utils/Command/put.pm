@@ -38,18 +38,19 @@ sub execute {
 	my $contents;
 	{
 		local $/ = undef;
+		binmode STDIN, ':utf8' if $opt->{utf8};
 		$contents = <STDIN>;
 	}
 
-	_store($file, $key, $contents);
+	_store($self, $file, $key, $contents, $opt);
 }
 
 sub _store {
-	my ($file, $key, $value) = @_;
-	my %hash;
-	tie %hash,  'DB_File', $file, O_RDWR, '0666', $DB_BTREE;
-	$hash{$key} = $value;
-	untie %hash;
+	my ($self, $filename, $key, $value, $opt) = @_;
+	my $hash = $self->app->do_tie( $filename, $opt);
+
+	$hash->{$key} = $opt->{utf8} ? encode('utf-8', $value) : $value;
+	untie $hash;
 }
 
 1;

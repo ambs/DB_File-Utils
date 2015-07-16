@@ -32,16 +32,15 @@ sub execute {
 	$opt = { %{$self->app->global_options}, %$opt};
 
 	foreach my $file (@$args) {
-		_dump($file);
+		_dump($self, $file, $opt);
 	}
 }
 
 sub _dump {
-	my $filename = shift;
-	my %hash;
-	tie %hash,  'DB_File', $filename, O_RDWR, '0666', $DB_BTREE;
-	say while (($_) = each %hash);
-	untie %hash;
+	my ($self, $filename, $opt) = @_;
+	my $hash = $self->app->do_tie( $filename, $opt);
+	say while (($_) = each %$hash);
+	untie $hash;
 }
 
 1;
