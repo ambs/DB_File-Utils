@@ -22,6 +22,9 @@ sub validate_args {
 
 	$self->usage_error("$args->[0] not found") unless -f $args->[0];
 
+	if ($self->app->global_options->{recno} && $args->[1] !~ /^\d+$/) {
+		$self->usage_error("RecNo indexing scheme only support integer keys");
+	}
 }
 
 sub execute {
@@ -40,14 +43,24 @@ sub execute {
 sub _retrieve {
 	my ($self, $file, $key, $opt) = @_;
 
-	my $hash = $self->app->do_tie( $file, $opt );
+	my $collection = $self->app->do_tie( $file, $opt );
 
-	if (exists($hash->{$key})) {
-		say $opt->{utf8} ? decode('utf-8', $hash->{$key}) : $hash->{$key};
-	} else {
-		die "Key $key not found!"
+	if (ref($collection) eq "HASH") {
+
+		if (exists($collection->{$key})) {
+			say $opt->{utf8} ? decode('utf-8', $collection->{$key}) : $collection->{$key};
+		} else {
+			die "Key $key not found!"
+		}
 	}
-	untie $hash;
+	else {
+		if (defined($collection->[$key])) {
+			say $opt->{utf8} ? decode('utf-8', $collection->[$key]) : $collection->[$key];
+		} else {
+			die "Key $key not found or value undefined!"
+		}
+	}
+	untie $collection;
 }
 
 1;

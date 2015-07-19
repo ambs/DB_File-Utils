@@ -1,5 +1,11 @@
 Revision history for perl module DB_File::Utils
 
+0.004 2015-07-19
+
+ - added -i option to put command. (read from file)
+ - support RecNo indexing scheme.
+   (note that keys need to be positive integer)
+
 0.003 2015-07-16
 
  - added tests.

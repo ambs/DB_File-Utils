@@ -38,9 +38,13 @@ sub execute {
 
 sub _dump {
 	my ($self, $filename, $opt) = @_;
-	my $hash = $self->app->do_tie( $filename, $opt);
-	say while (($_) = each %$hash);
-	untie $hash;
+	my $collection = $self->app->do_tie( $filename, $opt);
+	if (ref($collection) eq "HASH") {
+		say while (($_) = each %$collection);
+	} else {
+		say foreach grep { defined $collection->[$_] } keys @$collection;
+	}
+	untie $collection;
 }
 
 1;
