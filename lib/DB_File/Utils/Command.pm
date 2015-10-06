@@ -1,5 +1,7 @@
 package DB_File::Utils::Command;
 
+use warnings;
+use strict;
 use App::Cmd::Setup -command;
  
 
