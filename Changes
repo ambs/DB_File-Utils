@@ -1,5 +1,14 @@
 Revision history for perl module DB_File::Utils
 
+0.006 2015-10-06
+
+ - Updated Changes file
+
+0.005 2015-10-06
+
+ - use warnings and strick everywhere;
+ - add LICENSE and COPYRIGHT;
+
 0.004 2015-07-19
 
  - added -i option to put command. (read from file)
